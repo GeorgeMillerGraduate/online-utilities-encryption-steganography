@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Crypto Studio — Jenga-Code</title>
+    <meta
+      name="description"
+      content="Encrypt a message, hide it in a PNG and recover it locally in your browser."
+    />
+    <link
+      rel="canonical"
+      href="https://jenga-code.com/apps/encryption-steganography/"
+    />
+    <link rel="stylesheet" href="css/crypto-studio-v2.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to studio</a>
+    <header class="site-header">
+      <a aria-label="Jenga-Code homepage" class="brand" href="/"
+        ><svg
+          aria-hidden="true"
+          class="compass-mark"
+          height="54"
+          viewBox="0 0 64 64"
+          width="54"
+        >
+          <circle
+            cx="32"
+            cy="32"
+            fill="none"
+            r="23"
+            stroke="currentColor"
+            stroke-width="1"
+          ></circle>
+          <path
+            d="M32 2 38 26 62 32 38 38 32 62 26 38 2 32 26 26Z"
+            fill="none"
+            stroke="currentColor"
+          ></path>
+          <path
+            d="M32 7 32 32 26 26ZM57 32 32 32 38 26ZM32 57 32 32 38 38ZM7 32 32 32 26 38Z"
+            fill="currentColor"
+          ></path>
+          <circle cx="32" cy="32" fill="currentColor" r="3"></circle></svg
+        ><span
+          >Jenga-Code<small
+            >ALGORITHMS · GAMES · MATHEMATICAL IDEAS</small
+          ></span
+        ></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a><a aria-current="page" href="/apps/">Applications</a
+        ><a href="/blog/">Journal</a
+        ><a href="/qualifications/">Qualifications</a>
+      </nav>
+      <img
+        class="masthead-art"
+        src="images/cipher-study.webp"
+        width="360"
+        height="120"
+        alt=""
+      />
+    </header>
+    <main id="main" class="publication">
+      <aside class="left-column">
+        <p class="eyebrow">Private tools / Cryptography</p>
+        <h1>Crypto <em>Studio.</em></h1>
+        <p class="intro">
+          Encrypt a message. Hide it in a PNG. Recover it later.
+        </p>
+        <div role="tablist" aria-label="Studio mode" class="mode-tabs">
+          <button
+            type="button"
+            role="tab"
+            id="encryptTab"
+            aria-controls="encryptPanel encryptResult"
+            aria-selected="true"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <rect x="3" y="9" width="14" height="11" rx="2" />
+              <path d="M6 9V6a4 4 0 0 1 8 0v3M10 13v3" /></svg
+            >Encrypt</button
+          ><button
+            type="button"
+            role="tab"
+            id="decryptTab"
+            aria-controls="decryptPanel decryptResult"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <rect x="3" y="9" width="14" height="11" rx="2" />
+              <path d="M6 9V6a4 4 0 0 1 8 0M10 13v3" /></svg
+            >Decrypt
+          </button>
+        </div>
+        <img
+          class="sidebar-art"
+          src="images/cipher-study.webp"
+          width="600"
+          height="900"
+          alt="Engraved padlock, sealed letter and cipher wheel"
+        />
+        <p class="micro">Processed in your browser. No account required.</p>
+        <details class="explanation">
+          <summary>How it works</summary>
+          <p>
+            A password derives an AES-GCM key using PBKDF2. The encrypted
+            message can be copied as text or stored in a PNG’s pixel bits.
+          </p>
+          <p>
+            You need the same password to recover it. A wrong password or
+            changed message fails authentication.
+          </p>
+          <p>
+            Save the original PNG. Resizing, editing or JPEG conversion can
+            destroy its hidden data.
+          </p>
+        </details>
+        <p class="technical">AES-GCM · PBKDF2 · PNG</p>
+      </aside>
+      <section
+        id="encryptPanel"
+        role="tabpanel"
+        aria-labelledby="encryptTab"
+        class="input-column"
+      >
+        <fieldset id="encryptFields">
+          <h2>1. Write your message</h2>
+          <div class="label-row">
+            <label for="plainText">Message</label
+            ><span id="characterCount">0 characters</span>
+          </div>
+          <textarea
+            id="plainText"
+            rows="5"
+            placeholder="Type the message you want to encrypt…"
+            spellcheck="false"
+          ></textarea
+          ><label for="encryptPassword">Password</label>
+          <div class="password-field">
+            <input
+              id="encryptPassword"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Use a long, unique password"
+            /><button
+              type="button"
+              class="reveal"
+              data-password="encryptPassword"
+              aria-label="Show encryption password"
+              aria-pressed="false"
+            >
+              Show
+            </button>
+          </div>
+          <p class="help">Use the same password to decrypt.</p>
+          <div class="section-heading">
+            <h2>2. Choose a cover image</h2>
+            <button type="button" id="useGenerated" class="text-button">
+              Use generated cover
+            </button>
+          </div>
+          <div class="cover-picker">
+            <img
+              id="coverThumbnail"
+              src="images/message-cover.webp"
+              width="800"
+              height="500"
+              alt="Navy and copper geometric cover image"
+            />
+            <div>
+              <label class="upload-label" for="coverInput"
+                >Upload an image</label
+              ><input
+                id="coverInput"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+              />
+              <p class="help" id="coverName">
+                Optional: use your own PNG, JPEG or WebP.
+              </p>
+            </div>
+          </div>
+          <p id="capacity" class="help capacity"></p>
+          <div class="actions">
+            <button type="button" id="encryptButton" class="primary">
+              Encrypt &amp; create PNG →</button
+            ><button type="button" id="clearEncrypt">Clear</button>
+          </div>
+          <p id="encryptStatus" class="status" role="status" aria-live="polite">
+            Ready to encrypt.
+          </p>
+        </fieldset>
+      </section>
+      <section
+        id="encryptResult"
+        role="tabpanel"
+        aria-labelledby="encryptTab"
+        class="result-column"
+      >
+        <h2>3. Save your result</h2>
+        <figure class="result-preview">
+          <img
+            id="outputPlaceholder"
+            src="images/message-cover.webp"
+            width="800"
+            height="500"
+            alt="Example cover; generate to create an encrypted PNG"
+          /><canvas
+            id="encryptPreview"
+            hidden
+            aria-label="Image containing the encrypted message"
+          ></canvas>
+          <figcaption id="previewCaption">
+            Your encrypted PNG appears here.
+          </figcaption>
+        </figure>
+        <div class="actions">
+          <button id="saveImage" type="button" disabled>↓ Download PNG</button
+          ><button id="viewImage" type="button" disabled>
+            ⛶ View full size
+          </button>
+        </div>
+        <label for="cipherText">Encrypted text output</label
+        ><textarea
+          id="cipherText"
+          rows="3"
+          class="code"
+          readonly
+          placeholder="Encrypted text will appear here."
+          spellcheck="false"
+        ></textarea>
+        <div class="actions text-actions">
+          <button id="copyCipher" type="button" disabled>Copy text</button
+          ><button id="sendToDecrypt" type="button" disabled>
+            Try decrypting →
+          </button>
+        </div>
+        <p class="help">
+          Keep the password separately. Save the PNG without resizing or
+          recompressing it.
+        </p>
+      </section>
+      <section
+        id="decryptPanel"
+        role="tabpanel"
+        aria-labelledby="decryptTab"
+        class="input-column"
+        hidden
+      >
+        <fieldset id="decryptFields">
+          <h2>1. Open your message</h2>
+          <label for="decryptSource">Recover from</label
+          ><select id="decryptSource">
+            <option value="image">Encrypted PNG</option>
+            <option value="text">Encrypted text</option>
+          </select>
+          <div id="textSource" hidden>
+            <label for="decryptText">Encrypted text</label
+            ><textarea
+              id="decryptText"
+              rows="6"
+              class="code"
+              placeholder="Paste the complete JC2. message…"
+              spellcheck="false"
+            ></textarea>
+          </div>
+          <div id="imageSource">
+            <label for="decodeInput">Original encrypted PNG</label
+            ><input id="decodeInput" type="file" accept="image/png" />
+            <div class="decode-preview">
+              <canvas
+                id="decryptPreview"
+                hidden
+                aria-label="Uploaded image with hidden data"
+              ></canvas>
+              <p class="help">Choose the PNG downloaded from this app.</p>
+            </div>
+          </div>
+          <h2 class="decrypt-step">2. Enter its password</h2>
+          <label for="decryptPassword">Password</label>
+          <div class="password-field">
+            <input
+              id="decryptPassword"
+              type="password"
+              autocomplete="off"
+              placeholder="Password used for encryption"
+            /><button
+              type="button"
+              class="reveal"
+              data-password="decryptPassword"
+              aria-label="Show decryption password"
+              aria-pressed="false"
+            >
+              Show
+            </button>
+          </div>
+          <div class="actions">
+            <button id="decryptButton" type="button" class="primary">
+              Decrypt message →</button
+            ><button id="clearDecrypt" type="button">Clear</button>
+          </div>
+          <p id="decryptStatus" class="status" role="status" aria-live="polite">
+            Ready to decrypt.
+          </p>
+        </fieldset>
+      </section>
+      <section
+        id="decryptResult"
+        role="tabpanel"
+        aria-labelledby="decryptTab"
+        class="result-column"
+        hidden
+      >
+        <h2>3. Read your message</h2>
+        <label for="plainOutput">Recovered message</label
+        ><textarea
+          id="plainOutput"
+          rows="13"
+          readonly
+          placeholder="Your decrypted message will appear here."
+          spellcheck="false"
+        ></textarea
+        ><button id="copyPlain" type="button" disabled>Copy message</button>
+        <p class="help">
+          New messages are authenticated before the recovered text is shown.
+          Older supported messages are identified as legacy results.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <span>Jenga-Code / Cryptography &amp; hidden messages</span
+      ><a href="/apps/">All applications →</a>
+    </footer>
+    <script src="js/AESUtils.js"></script>
+    <script src="js/AES128.js"></script>
+    <script src="js/KeyDeriver.js"></script>
+    <script src="js/TextEncoder.js"></script>
+    <script src="js/LSBSteganography.js"></script>
+    <script src="js/CryptoEnvelope.js"></script>
+    <script src="js/studio-v2.js"></script>
+  </body>
+</html>
